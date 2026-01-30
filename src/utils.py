@@ -3,6 +3,7 @@ import os
 import requests
 import sys
 from pathlib import Path
+from PIL import Image
 from src.paths import PATHS
 
 logger = logging.getLogger(__name__)
@@ -66,3 +67,18 @@ def save_sprites(pokemon_class: object):
     except requests.HTTPError as e:
         logger.error(f'Failed to save sprites for "{pokemon_class.name}": {e}')
         raise
+
+def outliner(input_path: object, output_path: object):
+    img = Image.open(input_path)
+
+    # Force convert to RGBA
+    img = img.convert("RGBA")
+    pixels = img.load()
+
+    for y in range(img.height):
+        for x in range(img.width):
+            r, g, b, a = pixels[x, y]
+            if a > 0:  # if not transparent
+                pixels[x, y] = (0, 0, 0, a)  # turn black, keep alpha
+
+    img.save(output_path)
