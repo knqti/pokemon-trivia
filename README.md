@@ -1,3 +1,3 @@
-# python-project-template
+# pokemon-trivia
 
-A template for Python projects.
+Who's that Pokemon?
