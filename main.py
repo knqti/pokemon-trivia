@@ -1,10 +1,13 @@
 import config
 import random
+from src.classes import GameStats
 from src.paths import PATHS
 from src.tall_grass import read_pokedex
 from src.utils import setup
 from time import sleep
 
+
+stats = GameStats()
 
 def ask_question(pokemon: object):
     height_ft = round(pokemon.height * 0.328084, 1)
@@ -19,11 +22,16 @@ def ask_question(pokemon: object):
 
     print(f'\n{pokemon.flavor_text}')
     print(f'\n- This POK\u00e9MON is approxiamately {height_ft} ft. tall and weighs about {weight_lb} lb.\n- It is known to have the ability {ability}.\n')
+    stats.record_questions()
 
 def check_answer(user_answer: str, correct_answer: str) -> bool:
     user_answer = user_answer
 
-    if user_answer == correct_answer or user_answer == 'answer':
+    if user_answer == correct_answer:
+        stats.record_correct_answers()
+        return True
+    elif user_answer == 'answer':
+        stats.record_reveals()
         return True
     
     print('Nope try again.')
@@ -46,6 +54,7 @@ def main_loop():
             if user_input == 'quit':
                 return
             elif user_input == 'hint':
+                stats.record_hints()
                 print(f'\nIts type(s): {", ".join(mystery_pokemon.types)}')
                 continue
 
@@ -56,6 +65,8 @@ def main_loop():
                 print(f"It's...{mystery_pokemon.name.title()}!")
                 sleep(1)
                 break
+
+            stats.record_wrong_guesses()
 
 
 if __name__ == '__main__':
@@ -70,4 +81,6 @@ Enter "quit" to end the game.
     ''')
 
     main_loop()
-    print('Goodbye.')
+
+    stats.summary()
+    print(f'\nGoodbye.')
