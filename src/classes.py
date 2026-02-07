@@ -17,6 +17,8 @@ class Pokemon:
     sprites: str=None
     cries: str=None
     flavor_text: str=None
+    sprite_outline_path: str=None
+    sprite_reveal_path: str=None
 
 class ApiClient:
 

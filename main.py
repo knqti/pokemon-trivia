@@ -3,7 +3,8 @@ import random
 from src.classes import GameStats
 from src.paths import PATHS
 from src.tall_grass import read_pokedex
-from src.utils import setup
+from src.utils import setup, load_sprites
+from term_image.image import from_file
 from time import sleep
 
 
@@ -13,7 +14,9 @@ def ask_question(pokemon: object):
     height_ft = round(pokemon.height * 0.328084, 1)
     weight_lb = round(pokemon.weight * 0.2204623, 1)
     ability = random.choice(pokemon.abilities)
+    outline_img = from_file(pokemon.sprite_outline_path)
 
+    outline_img.draw()
     title = "Who's that POK\u00e9MON?"
     print()
     print('#' * len(title))
@@ -22,6 +25,7 @@ def ask_question(pokemon: object):
 
     print(f'\n{pokemon.flavor_text}')
     print(f'\n- This POK\u00e9MON is approxiamately {height_ft} ft. tall and weighs about {weight_lb} lb.\n- It is known to have the ability {ability}.\n')
+
     stats.record_questions()
 
 def check_answer(user_answer: str, correct_answer: str) -> bool:
@@ -45,6 +49,7 @@ def main_loop():
     
         id = random.randint(1, 151)
         mystery_pokemon = read_pokedex(pokemon_id=id, to_print=False)
+        mystery_pokemon = load_sprites(mystery_pokemon)
 
         ask_question(mystery_pokemon)
         
@@ -62,6 +67,8 @@ def main_loop():
                 user_answer=user_input, 
                 correct_answer=mystery_pokemon.name
             ):
+                reveal_img = from_file(mystery_pokemon.sprite_reveal_path)
+                reveal_img.draw()
                 print(f"It's...{mystery_pokemon.name.title()}!")
                 sleep(1)
                 break

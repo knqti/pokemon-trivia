@@ -35,7 +35,7 @@ def catch_pokemon(pokemon_id: int, api_client: object=ApiClient()):
 
     logger.info(f'Gotcha! {data['name']} was caught')
 
-def read_pokedex(pokemon_id: int, to_print: bool=True):
+def read_pokedex(pokemon_id: int, to_print: bool=True) -> object:
     file_path = PATHS['pokemon'] / f'pokemon_id_{pokemon_id}.json'
     
     with open(file_path, 'r') as f:

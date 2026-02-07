@@ -82,3 +82,15 @@ def outliner(input_path: object, output_path: object):
                 pixels[x, y] = (0, 0, 0, a)  # turn black, keep alpha
 
     img.save(output_path)
+
+def load_sprites(pokemon_class: object) -> object:
+    id = pokemon_class.id
+    name = pokemon_class.name
+    
+    reveal_file_name = f'sprites_{id}_{name}.png'
+    outline_file_name = f'outline_{reveal_file_name}'
+
+    pokemon_class.sprite_reveal_path = PATHS['sprites'] / reveal_file_name
+    pokemon_class.sprite_outline_path = PATHS['sprites'] / outline_file_name
+
+    return pokemon_class
