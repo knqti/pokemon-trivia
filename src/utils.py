@@ -94,3 +94,13 @@ def load_sprites(pokemon_class: object) -> object:
     pokemon_class.sprite_outline_path = PATHS['sprites'] / outline_file_name
 
     return pokemon_class
+
+def load_cry(pokemon_class: object) -> object:
+    id = pokemon_class.id
+    name = pokemon_class.name
+    
+    cry_path = f'cries_{id}_{name}.ogg'
+
+    pokemon_class.cry_path = PATHS['cries'] / cry_path
+
+    return pokemon_class

@@ -1,14 +1,23 @@
 import config
+import os
 import random
 from src.classes import GameStats
 from src.paths import PATHS
 from src.tall_grass import read_pokedex
-from src.utils import setup, load_sprites
+from src.utils import setup, load_cry, load_sprites
 from term_image.image import from_file
 from time import sleep
 
 
 stats = GameStats()
+
+def get_pokemon() -> object:
+    id = random.randint(1, 151)
+    pokemon = read_pokedex(pokemon_id=id, to_print=False)
+    pokemon = load_sprites(pokemon)
+    pokemon = load_cry(pokemon)
+
+    return pokemon
 
 def ask_question(pokemon: object):
     height_ft = round(pokemon.height * 0.328084, 1)
@@ -46,11 +55,8 @@ def main_loop():
         user_input = input('\nPress "enter" to continue...')
         if user_input == 'quit':
             return
-    
-        id = random.randint(1, 151)
-        mystery_pokemon = read_pokedex(pokemon_id=id, to_print=False)
-        mystery_pokemon = load_sprites(mystery_pokemon)
 
+        mystery_pokemon = get_pokemon()
         ask_question(mystery_pokemon)
         
         while True:
@@ -70,7 +76,9 @@ def main_loop():
                 reveal_img = from_file(mystery_pokemon.sprite_reveal_path)
                 reveal_img.draw()
                 print(f"It's...{mystery_pokemon.name.title()}!")
-                sleep(1)
+                sleep(0.5)
+                os.system(f'ffplay -nodisp -autoexit {mystery_pokemon.cry_path} > /dev/null 2>&1')
+
                 break
 
             stats.record_wrong_guesses()
